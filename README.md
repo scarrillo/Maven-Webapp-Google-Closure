@@ -12,15 +12,27 @@ It uses maven profiles to:
 The dev profile is mainly used in a maven overlay situation, where you may have mutliple overlay projects containing more CSS and JS files.
 That said, it also works fine as a single project, without maven overlays.
 
-** Ant scripts:
+### ** The Ant scripts:
 
-The JS compiler ant script is from:
+The JS build script is from:
   http://code.google.com/p/closure-compiler/wiki/BuildingWithAnt
 
-The CSS compiler ant script is a variant of a build script I wrote and posted here:
+The CSS build script is a variant of a build script I wrote and posted here:
   https://github.com/scarrillo/GSS-Build
   - This variant has a few added options for managing compilation and recompiling via:
     Sublime Text or command line with mvn antrun:run
+
+Sublime Text Maven Build System
+===========================
+I've also included a variant of a maven build system I wrote for work.
+Place this in Sublime's /Packages/User/ dirctory and then associate the project with the "mvn-run" build system.
+
+You can then:
+- **cmd + b**: Start Jetty (and compile)
+- **alt + j**: Recompile CSS and JS (without restarting jetty)
+- **cmd + shift + b**: Stop and restart Jetty
+
+Notes: Windows users, this Sublime build script is not 100% yet.
 
 ----
 Closure Compiler jar and GSS examples from: http://code.google.com/p/closure-stylesheets/
