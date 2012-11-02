@@ -30,7 +30,7 @@ Place this in Sublime's /Packages/User/ dirctory and then associate the project 
 You can then:
 - cmd + b: Start Jetty (and compile)
 - alt + j: Recompile CSS and JS (without restarting jetty)
-- cmd + shift + b: Restart Jetty:
+- cmd + shift + b: Stop and restart Jetty
 
 Notes: Windows users, this Sublime build script is not 100% yet.
 
