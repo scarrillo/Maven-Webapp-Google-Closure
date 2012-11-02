@@ -2,9 +2,7 @@
  * @author: shawn.carrillo+chrome@gmail.com
  * date: 2012.07.15
  */
-goog.provide("utils");
-
-utils = {
+var utils = {
 	DEBUG : true,
 	/**
 	 * @param {string|Object} message string to print

@@ -10,6 +10,7 @@
 	<description>Example webapp utilizing google closure and maven profiles to compile js and css resources.</description>
 	<packaging>war</packaging>
 	<properties>
+		<path.webapp>${basedir}/src/main/webapp/</path.webapp>
 		<google.version>r2180</google.version>
 		<google.webapp></google.webapp>
 		<google.target-js></google.target-js>
@@ -47,6 +48,12 @@
 					<webAppConfig>
 						<contextPath>/</contextPath>
 						<defaultsDescriptor>target/classes/webdefault.xml</defaultsDescriptor>
+						<baseResource implementation="org.mortbay.resource.ResourceCollection">
+						<!-- reference local webapp and overlay paths for editing files while the webapp is running -->
+							<resourcesAsCSV>
+								${path.webapp}
+							</resourcesAsCSV>
+						</baseResource>
 					</webAppConfig>					
 					<connectors>
 						<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
