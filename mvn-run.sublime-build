@@ -1,0 +1,64 @@
+/**
+ * @author carrillos|2012
+ * https://github.com/scarrillo/Maven-Webapp-Google-Closure
+ *
+ * Install: Packages/User/mvn-run.sublime-build
+ *
+ * Useful key shortcuts:
+ *		cmd + shift + b : Stop jetty
+ *	 	alt + j : recompile assets - Add to keybindings: { "keys": ["alt+j"], "command": "build", "args": {"variant": "Recompile"} }
+ *
+ * Add stop params to jetty config:
+ *		<stopKey>killit</stopKey>
+ *		<stopPort>9099</stopPort>
+ */
+{
+	"cmd": ["mvn", "-e",
+		"-Plocalhost,!default",
+		"clean", "jetty:stop", "jetty:run"
+	],
+	"working_dir": "${folder:${project_path:${file_path}}}",
+	"env": {
+		"MAVEN_OPTS":"-Xms512M -Xmx512M -XX:MaxPermSize=256M"
+	},
+	"file_regex": "\\[ERROR\\] (\\/.*?):(\\d+):() (.*?)$",
+
+	"windows" : {
+		"cmd": ["mvn.bat", "-e", "clean", "jetty:run"]
+	},
+
+	"variants": [
+		{
+			"cmd": ["mvn", "jetty:stop"],
+			"name": "Run" // The 'Run' keyword forces this variant to show up in the tools menu: ctrl+super+b
+		},
+		{
+			"cmd": ["mvn",
+				"antrun:run",
+				"-Plocalhost,!default",
+				"-Dgoogle.force=false",
+				"-Djs.enabled=true",
+				"-Dcss.enabled=true"
+			],
+			"name": "Recompile"
+		}
+	]
+}
+
+/*
+ * Windows: variants above do not work properly. The windows cmd gets executed as well.
+ * Below works, but is a specific replacement for windows
+{ 
+	"cmd": ["mvn.bat", "-e", "jetty:stop", "jetty:run"],
+	"working_dir": "${project_path:${folder}}",
+	"env": {"stage": "localhost", "MAVEN_OPTS":"-Xms512M -Xmx512M -XX:MaxPermSize=256M"},
+	"file_regex": "\\[ERROR\\] (\\/.*?):(\\d+):() (.*?)$",
+
+	"variants": [
+		{
+			"cmd": ["mvn.bat", "jetty:stop"],
+			"name": "Run"
+		}
+	]
+}
+*/
