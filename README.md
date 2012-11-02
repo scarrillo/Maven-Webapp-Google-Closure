@@ -22,5 +22,20 @@ The CSS compiler ant script is a variant of a build script I wrote and posted he
   - This variant has a few added options for managing compilation and recompiling via:
     Sublime Text or command line with mvn antrun:run
 
+Sublime Text Maven Build System
+===========================
+I've also included a variant of a maven build system I use at work.
+Place this in Sublime's /Packages/User/ dirctory and then associate the project with the "mvn-run" build system.
+
+You can then:
+- Start Jetty (and compile) with:
+  cmd + b
+
+- Recompile CSS and JS without restarting jetty:
+  alt + j
+
+- Restart Jetty:
+  cmd + shift + b
+
 ----
 Closure Compiler jar and GSS examples from: http://code.google.com/p/closure-stylesheets/
