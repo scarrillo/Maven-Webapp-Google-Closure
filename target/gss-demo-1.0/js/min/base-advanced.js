@@ -1,1 +1,0 @@
-void 0===console.info?console.log("Hello Git"):console.info("Hello Git");
