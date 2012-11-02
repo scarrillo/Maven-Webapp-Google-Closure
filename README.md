@@ -24,7 +24,7 @@ The CSS build script is a variant of a build script I wrote and posted here:
 
 Sublime Text Maven Build System
 ===========================
-I've also included a variant of a maven build system I use at work.
+I've also included a variant of a maven build system I wrote for work.
 Place this in Sublime's /Packages/User/ dirctory and then associate the project with the "mvn-run" build system.
 
 You can then:
