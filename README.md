@@ -17,8 +17,10 @@ That said, it also works fine as a single project, without maven overlays.
 The JS compiler ant script is from:
   http://code.google.com/p/closure-compiler/wiki/BuildingWithAnt
 
-The CSS compiler ant script is a custom script I wrote and posted here:
+The CSS compiler ant script is a variant of a build script I wrote and posted here:
   https://github.com/scarrillo/GSS-Build
+  - This variant has a few added options for managing compilation and recompiling via:
+    Sublime Text or command line with mvn antrun:run
 
 ----
 Closure Compiler jar and GSS examples from: http://code.google.com/p/closure-stylesheets/
