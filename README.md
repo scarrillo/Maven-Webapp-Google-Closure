@@ -7,10 +7,10 @@ This is a starter maven webapp that will run on port 9000.
 It uses maven profiles to:
 
   - localhost: Compile CSS and JS locally within the webapp for rapid testing
-  - dev: Compile CSS and JS into an exploded webapp folder where it packages resources into a jar.
+  - dev: Compile CSS and JS into an exploded webapp folder where they will be packaged into the final webapp war.
 
-The dev profile is used in a maven overlay situation, where you may have mutliple overlay folders containing more CSS and JS files.
-That said, it also works fine without utilizing maven overlays.
+The dev profile is mainly used in a maven overlay situation, where you may have mutliple overlay projects containing more CSS and JS files.
+That said, it also works fine as a single project, without maven overlays.
 
 ----
 
