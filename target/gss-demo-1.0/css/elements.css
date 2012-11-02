@@ -1,0 +1,30 @@
+/* Element overrides for proper list element styles and such */
+ul {
+	padding: 0;
+}
+
+li {
+	list-style:none;
+}
+
+dl {
+	margin:10px 15px;
+}	
+
+dl dt, dl dd{
+	display:inline;
+	margin:0;
+}
+
+dl dt {
+	font-weight:bold;
+	padding-right:5px;
+}
+
+dl dd {
+	padding-right:20px;
+}
+
+dl img {
+	vertical-align:middle;
+}

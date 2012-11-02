@@ -1,0 +1,10 @@
+.logo {
+  width: 150px;
+  height: 55px;
+  /* Invalid url */
+  background-image: urel('http://www.google.com/images/logo_sm.gif');
+  /* Duplicate rule */
+  border-color: #DCDCDC;
+  /* annotation fix below */
+  /* @alternate */ border-color: rgba(0, 0, 0, 0.1);
+}

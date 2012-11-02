@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    author: shawn.carrillo+chrome@gmail.com
+    date: 2012.10.29
+
+    Google Closure's CSS Compiler. Compiler and gss examples from:
+    http://code.google.com/p/closure-stylesheets/
+
+	Ant script inspired by Kyaw's script:
+	https://groups.google.com/forum/?fromgroups=#!topic/closure-stylesheets-discuss/jPMr6s9Po7M
+-->
+<project basedir="." default="compile">
+	<target name="compile">
+		<echo message="CSS Closure compiler: ${ant.version}" />
+
+		<condition property="build.compile" value="true">
+			<istrue value="${build.enabled}" />
+		</condition>
+		<antcall target="build" />
+	</target>
+
+	<target name="build" if="build.compile">
+		<!-- build.force has a few seemingly redundant options, but you can:
+			- Globally: deletes the entire minified folder.
+			- Individually: force a specific group to be recompiled.
+
+			You can:
+			- set the global build.force to true
+			- or: set the global forceRecompile to false, and enable forceRecompile on each task to true
+			- or: rely on a target to be built when it's resources have been modified
+		-->
+		<condition property="build.force" value="${build.force}" else="false">
+			<isset property="build.force" />
+		</condition>
+		<!-- useful to cleanup old groups -->
+		<antcall target="css-clean" />
+
+		<csscomp group="base" prettyPrint="false" destination="${build.target}" forceRecompile="${build.force}">
+			<filelist dir="${build.source}/css/">
+				<file name="elements.css" />
+				<file name="variables-example.gss" />
+				<file name="functions-example.gss" />
+				<file name="conditionals-example.gss" />
+				<file name="mixins-example.gss" />
+				<!-- display linting and annotation ability -->
+ 				<!-- <file name="invalid-example.gss" /> -->
+			</filelist>
+			<!-- Can contain multiple directories, filelist nodes -->
+		</csscomp>
+
+		<csscomp group="other" prettyPrint="false" destination="${build.target}" forceRecompile="${build.force}">
+			<filelist dir="${build.source}/css/">
+				<file name="elements.css" />
+				<file name="variables-example.gss" />
+			</filelist>
+		</csscomp>
+
+		<!-- Wildcard file lists -->
+		<!-- <csscomp group="all">
+			<fileset dir="css/" casesensitive="yes">
+				<include name="*.gss"/>
+				<include name="*.css"/>
+			</fileset>
+		</csscomp> -->
+	</target>
+
+	<macrodef name="csscomp">
+		<attribute name="group" />
+		<attribute name="destination" />
+		<attribute name="forceRecompile" />
+		<attribute name="prettyPrint" default="false" />
+		<element name="paths" implicit="true" />
+
+		<sequential>
+			<!-- Create a dynamic property name based on group, note this doesn't work with default attributes -->
+			<!-- ant: 1.7: dynamic property: <uptodate property="@{group}.current" targetfile="@{destination}@{group}.css"> -->
+			<local name="css.current" />
+			<uptodate property="css.current" targetfile="@{destination}@{group}.css">
+				<srcresources>
+					<union>
+						<paths />
+					</union>
+				</srcresources>
+			</uptodate>
+
+			<!-- Compile when either forceRecompile is true or a file has been modified -->
+			<local name="css.compile" />
+			<condition property="css.compile" value="true" else="false">
+				<or>
+					<istrue value="@{forceRecompile}" />
+					<not><isset property="css.current"  /></not>
+				</or>
+			</condition>
+
+			<local name="css.pretty" />
+			<condition property="css.pretty" value="--pretty-print" else="">
+				<equals arg1="@{prettyPrint}" arg2="true" />
+			</condition>
+
+			<!-- local is required because properties are immutable -->
+			<local name="css.paths"/>
+			<!-- concat file lists into a single line, expected by compiler -->
+ 			<pathconvert property="css.paths" pathsep=" ">
+				<paths />
+			</pathconvert>
+
+			<antcall target="css-compile">
+				<param name="compile.enable" value="${css.compile}"/>
+				<param name="compile.group" value="@{group}"/>
+				<param name="compile.pretty" value="${css.pretty}"/>
+				<param name="compile.destination" value="@{destination}@{group}.css"/>
+				<param name="compile.paths" value="${css.paths}"/>
+			</antcall>
+
+			<antcall target="css-cached">
+				<param name="compile.enable" value="${css.compile}"/>
+				<param name="compile.group" value="@{group}"/>
+			</antcall>
+		</sequential>
+	</macrodef>
+
+	<!-- ant: 1.7: dynamic property: <target name="css-compile" if="${compile.group}.current"> -->
+	<target name="css-compile" if="${compile.enable}">
+		<echo message="${compile.group}" />
+		<java jar="src/main/webapp/WEB-INF/lib/closure-stylesheets-20111230.jar"
+				fork="true" failonerror="true" maxmemory="128m">
+
+			<arg line="${compile.pretty}" />
+			<arg line="--output-file ${compile.destination}" />
+			<!-- white list a function for this build, remove slash in hyphens -->
+			<!-- <arg line="-\-allowed-non-standard-function urel" /> -->
+			<arg line="${compile.paths}" />
+		</java>
+	</target>
+
+	<!-- ant: 1.7: dynamic property: <target name="css-cached" if="${compile.group}.current"> -->
+	<target name="css-cached" unless="${compile.enable}">
+		<echo message="${compile.group}" />
+	</target>
+
+	<target name="css-clean" if="${build.force}">
+		<echo message="Removing cached files: ${build.target}" />
+		<delete dir="${buildDir}" verbose="true" />
+	</target>
+
+</project>

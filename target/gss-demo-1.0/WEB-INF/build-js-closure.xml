@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project basedir="." default="compile">
+	<target name="compile">
+		<condition property="build.compile" value="true">
+			<istrue value="${build.enabled}" />
+		</condition>
+		<antcall target="build" />
+	</target>
+
+	<taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask" classpath="${build.classpath}" />
+
+	<!-- Create build.force property with a default 'false' value if it was not passed in --> 
+	<condition property="build.force" value="${build.force}" else="false">
+		<isset property="build.force" />
+	</condition>
+
+	<target name="build" if="build.compile">
+		<jscomp compilationLevel="whitespace" warning="verbose" prettyPrint="false" forceRecompile="${build.force}"
+	    		debug="false" output="${build.target}base.js">
+
+			<externs dir="${build.source}/js/">
+				<file name="externs.js" />
+	  		</externs>
+
+			<sources dir="${build.source}/js/">
+				<file name="utils.js" />
+				<file name="hello.js" />
+			</sources>
+		</jscomp>
+
+		<jscomp compilationLevel="advanced" warning="verbose" prettyPrint="false" forceRecompile="${build.force}"
+	    		debug="false" output="${build.target}base-advanced.js">
+
+			<externs dir="${build.source}/js/">
+				<file name="externs.js" />
+	  		</externs>
+
+			<sources dir="${build.source}/js/">
+				<file name="utils.js" />
+				<file name="hello.js" />
+			</sources>
+		</jscomp>
+
+	</target>
+</project>

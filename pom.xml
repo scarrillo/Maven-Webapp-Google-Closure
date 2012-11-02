@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>co.shawn</groupId>
+	<artifactId>gss-maven-demo</artifactId>
+	<version>1.0</version>
+
+	<name>Google Closure Maven Demo</name>
+	<description>Example webapp utilizing google closure and maven profiles to compile js and css resources.</description>
+	<packaging>war</packaging>
+	<properties>
+		<google.version>r2180</google.version>
+		<google.webapp></google.webapp>
+		<google.target-js></google.target-js>
+		<google.target-css></google.target-css>
+		<google.force>false</google.force>
+		<css.enabled>true</css.enabled>
+		<js.enabled>true</js.enabled>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.google.javascript</groupId>
+			<artifactId>closure-compiler</artifactId>
+			<version>${google.version}</version>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<finalName>gss-demo-${pom.version}</finalName>
+		<plugins>			
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>maven-jetty-plugin</artifactId>
+				<version>6.1.22</version>
+				<configuration>
+					<reload>automatic</reload>
+					<scanIntervalSeconds>5</scanIntervalSeconds>
+					<tmpDir>${project.build.directory}/${project.build.finalName}</tmpDir>
+					<useTestClasspath>false</useTestClasspath>
+					<webXml>${project.build.directory}/${project.build.finalName}/WEB-INF/web.xml</webXml> 
+					<webAppSourceDirectory>${project.build.directory}/${project.build.finalName}/</webAppSourceDirectory>
+					<webApp>${project.build.directory}/${project.build.finalName}/</webApp>
+					<stopKey>killit</stopKey>
+					<stopPort>9099</stopPort>
+					<webAppConfig>
+						<contextPath>/</contextPath>
+						<defaultsDescriptor>target/classes/webdefault.xml</defaultsDescriptor>
+					</webAppConfig>					
+					<connectors>
+						<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+							<port>9000</port>
+							<maxIdleTime>60000</maxIdleTime>
+						</connector>
+					</connectors>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1-beta-1</version>
+				<executions>
+	      			<execution>
+		        		<id>unpack</id>
+		        		<goals><goal>exploded</goal></goals>
+				        <phase>compile</phase>
+						<configuration>
+							<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+							<useCache>false</useCache>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<target>
+						<ant antfile="src/main/webapp/WEB-INF/build-js-closure.xml" target="compile">
+							<property name="build.classpath" refid="maven.compile.classpath" />
+							<property name="build.enabled" value="${js.enabled}" />
+							<property name="build.source" value="${google.webapp}" />
+							<property name="build.target" value="${google.target-js}" />
+							<property name="build.force" value="${google.force}" />
+						</ant>
+
+						<ant antfile="src/main/webapp/WEB-INF/build-css-closure.xml" target="compile">
+							<property name="build.classpath" refid="maven.compile.classpath" />
+							<property name="build.enabled" value="${css.enabled}" />
+							<property name="build.source" value="${google.webapp}" />
+							<property name="build.target" value="${google.target-css}" />
+							<property name="build.force" value="${google.force}" />
+						</ant>
+					</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<profiles>
+		<profile>
+			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<google.webapp>${project.build.directory}/${project.build.finalName}</google.webapp>
+				<google.target-js>${project.build.directory}/${project.build.finalName}/js/min/</google.target-js>
+				<google.target-css>${project.build.directory}/${project.build.finalName}/css/min/</google.target-css>
+			</properties>
+		</profile>
+		<profile>
+			<id>localhost</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<google.webapp>src/main/webapp</google.webapp>
+				<google.target-js>${basedir}/src/main/webapp/js/min/</google.target-js>
+				<google.target-css>${basedir}/src/main/webapp/css/min/</google.target-css>
+			</properties>
+		</profile>
+	</profiles>
+</project>
