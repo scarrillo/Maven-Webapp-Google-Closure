@@ -28,14 +28,11 @@ I've also included a variant of a maven build system I use at work.
 Place this in Sublime's /Packages/User/ dirctory and then associate the project with the "mvn-run" build system.
 
 You can then:
-- Start Jetty (and compile) with:
-  cmd + b
+- cmd + b: Start Jetty (and compile)
+- alt + j: Recompile CSS and JS (without restarting jetty)
+- cmd + shift + b: Restart Jetty:
 
-- Recompile CSS and JS without restarting jetty:
-  alt + j
-
-- Restart Jetty:
-  cmd + shift + b
+Notes: Windows users, this Sublime build script is not 100% yet.
 
 ----
 Closure Compiler jar and GSS examples from: http://code.google.com/p/closure-stylesheets/
