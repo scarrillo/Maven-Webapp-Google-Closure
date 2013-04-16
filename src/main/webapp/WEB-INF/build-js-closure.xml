@@ -16,6 +16,7 @@
 	</condition>
 
 	<target name="build" if="build.compile">
+		<antcall target="closure-clean" />
 		<jscomp compilationLevel="whitespace" warning="verbose" prettyPrint="false" forceRecompile="${build.force}"
 	    		debug="false" output="${build.target}base.js">
 
@@ -41,6 +42,13 @@
 				<file name="hello.js" />
 			</sources>
 		</jscomp>
+	</target>
 
+	<target name="closure-clean" if="${build.force}">
+		<echo message="Removing cached files: ${build.target}" />
+		<!-- <delete dir="${buildDir}" verbose="true" /> -->
+		<delete includeemptydirs="true" verbose="true">
+			<fileset dir="${build.target}" includes="**/*" excludes="**/readme.txt" defaultexcludes="false" />
+		</delete>
 	</target>
 </project>
