@@ -33,7 +33,7 @@
 			<isset property="build.force" />
 		</condition>
 		<!-- useful to cleanup old groups -->
-		<antcall target="css-clean" />
+		<antcall target="closure-clean" />
 
 		<csscomp group="base" prettyPrint="false" destination="${build.target}" forceRecompile="${build.force}">
 			<filelist dir="${build.source}/css/">
@@ -138,9 +138,12 @@
 		<echo message="${compile.group}" />
 	</target>
 
-	<target name="css-clean" if="${build.force}">
+	<target name="closure-clean" if="${build.force}">
 		<echo message="Removing cached files: ${build.target}" />
-		<delete dir="${buildDir}" verbose="true" />
+		<!-- <delete dir="${buildDir}" verbose="true" /> -->
+		<delete includeemptydirs="true" verbose="true">
+			<fileset dir="${build.target}" includes="**/*" excludes="**/readme.txt" defaultexcludes="false" />
+		</delete>
 	</target>
 
 </project>
